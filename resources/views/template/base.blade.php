@@ -8,7 +8,7 @@
     <link rel="icon" type="image/x-icon" href="{{ url('favicon.ico') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
       integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{ url('assets/css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url('assets/css/styles.css?r=' . rand(1, 10000)) }}">
   </head>
 
   <body>
@@ -74,7 +74,8 @@
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
-      <script src="{{ url('assets/js/main.js') }}"></script>
+      @yield('scripts')
+      <script src="{{ url('assets/js/main.js?r=' . rand(1, 10000)) }}"></script>
   </body>
 
 </html>

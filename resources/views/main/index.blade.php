@@ -6,10 +6,27 @@
     @foreach($blogs as $blog)
     <div class="col">
         <div class="card shadow-sm" style="min-height: 500px;">
+            @php
+                $url = url('assets/img/noticia.jpg');
+                if($blog->path != null) {
+                    $url = url('storage/' . $blog->path);
+                }
+            @endphp
+            <!--<svg aria-label="Placeholder: Thumbnail" class="bd-placeholder-img card-img-top"
+                height="225" preserveAspectRatio="xMidYMid slice" role="img" width="100%"
+                xmlns="http://www.w3.org/2000/svg"
+                style="background-image: url('{{ $url }}');
+                       background-size: cover;
+                       background-position: center center;">
+                <title>Placeholder</title>
+                <rect width="100%" height="100%" fill="#55595c11"></rect>
+                <text x="5%" y="30%" fill="#eceeef"
+                    dy=".3em" style="font-weight: bold; font-size: 1.5rem;">{{ $blog->title }}</text>
+            </svg>-->
             <svg aria-label="Placeholder: Thumbnail" class="bd-placeholder-img card-img-top"
                 height="225" preserveAspectRatio="xMidYMid slice" role="img" width="100%"
                 xmlns="http://www.w3.org/2000/svg"
-                style="background-image: url('{{ url('assets/img/noticia.jpg') }}');
+                style="background-image: url('{{ $blog->getPath() }}');
                        background-size: cover;
                        background-position: center center;">
                 <title>Placeholder</title>
@@ -17,6 +34,17 @@
                 <text x="5%" y="30%" fill="#eceeef"
                     dy=".3em" style="font-weight: bold; font-size: 1.5rem;">{{ $blog->title }}</text>
             </svg>
+            <!--<svg aria-label="Placeholder: Thumbnail" class="bd-placeholder-img card-img-top"
+                height="225" preserveAspectRatio="xMidYMid slice" role="img" width="100%"
+                xmlns="http://www.w3.org/2000/svg"
+                style="background-image: url('@if($blog->path == null){{ url('assets/img/noticia.jpg') }}@else{{ url('storage/' . $blog->path) }}@endif');
+                       background-size: cover;
+                       background-position: center center;">
+                <title>Placeholder</title>
+                <rect width="100%" height="100%" fill="#55595c11"></rect>
+                <text x="5%" y="30%" fill="#eceeef"
+                    dy=".3em" style="font-weight: bold; font-size: 1.5rem;">{{ $blog->title }}</text>
+            </svg>-->
             <div class="card-body">
                 <p class="card-text">
                     {{ $blog->entry }}

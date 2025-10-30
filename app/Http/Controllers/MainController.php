@@ -33,26 +33,15 @@ class MainController extends Controller {
 
     function index(): View {
         $blogs = Blog::all();
+        foreach($blogs as $blog) {
+            $url = url('assets/img/noticia.jpg');
+            if($blog->path != null) {
+                $url = url('storage/' . $blog->path);
+            }
+            $blog->newPath = $url;
+        }
         $array = ['blogs' => $blogs];
         return view('main.index', $array);
-    }
-
-    function prueba(): View {
-        return view('main.prueba');
-    }
-
-    function postprueba(Request $request) {
-        $data = $request->all();
-        $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
-        $image = $request->file('image');
-        //$customFileName = 'my-new-image-name.' . $image->getClientOriginalExtension();
-        //$path = $image->storeAs('images', $customFileName, 'public');
-        $customFileName = 'second.' . $image->getClientOriginalExtension();
-        $path = $image->storeAs('images', $customFileName);
-        $path = $image->store('carpeta', 'local');
-        dd([$path, storage_path('app/private') . '/' . $path]);
     }
 
 }

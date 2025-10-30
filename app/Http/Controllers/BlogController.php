@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Blog;
+use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Http\RedirectResponse;
@@ -28,6 +29,9 @@ class BlogController extends Controller {
         $blog = new Blog($request->all());
         try {
             $result = $blog->save(); //insert into blog ...
+            $path = $this->upload($request, $blog->id);
+            $blog->path = $path;
+            $result = $blog->save(); //update ...
             $message = 'The new has been added.';
         } catch(UniqueConstraintViolationException $e) {
             $message = 'The same author could not write the same entry.';
@@ -46,8 +50,18 @@ class BlogController extends Controller {
         }
     }
 
+    private function upload(Request $request, $id) {
+        $image = $request->file('image');
+        $fileName = $id . '.' . $image->getClientOriginalExtension();
+        $path = $image->storeAs('images', $fileName, 'public');
+        $path = $image->storeAs('images', $fileName, 'local');
+        return $path;
+        //dd([storage_path('app/public') . '/' . $path1, storage_path('app/private') . '/' . $path2]);
+    }
+
     function show(Blog $blog): View {
-        return view('blog.show', ['blog' => $blog]);
+        $year = Carbon::now()->year;
+        return view('blog.show', ['blog' => $blog, 'year' => $year]);
     }
 
     //no me llega el blog

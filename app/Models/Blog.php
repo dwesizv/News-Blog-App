@@ -17,4 +17,12 @@ class Blog extends Model {
         'text',
         'title',
     ];
+
+    function getPath() {
+        $url = url('assets/img/noticia.jpg');
+        if($this->path != null) {
+            $url = url('storage/' . $this->path);
+        }
+        return $url;
+    }
 }

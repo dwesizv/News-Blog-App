@@ -2,6 +2,26 @@
 
 @section('content')
 
+<!-- begin modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="deleteModalLabel">Confirm delete</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ¿Seguro que quieres borrar la noticia <span id="modal-news-title"></span>?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button form="form-delete" type="submit" class="btn btn-primary">Delete news</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end modal -->
+
 <table class="table table-hover">
 
     <thead>
@@ -23,6 +43,7 @@
                 <a href="{{ route('blog.show', $blog->id) }}" class="btn btn-success">view</a>
                 <a href="{{ route('blog.edit', $blog->id) }}" class="btn btn-warning">edit</a>
                 <a data-title="{{$blog->title}}" data-href="{{ route('blog.destroy', $blog->id) }}" class="btn-delete btn btn-danger">delete</a>
+                <a data-title="{{$blog->title}}" data-href="{{ route('blog.destroy', $blog->id) }}" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">delete</a>
                 <!--<form style="display: inline;" action="{{ route('blog.destroy', $blog->id) }}" method="post">
                     @csrf
                     @method('delete')
@@ -45,26 +66,6 @@
     @csrf
     @method('delete')
 </form>
-
-<script>
-    const formDelete = document.getElementById('form-delete');
-
-    var elements = document.querySelectorAll('.btn-delete');
-    elements.forEach(el => el.addEventListener('click', event => {
-        if(confirm('¿Seguro que quieres borrar la noticia: ' + event.target.dataset.title + '?')) {
-            formDelete.action = event.target.dataset.href;
-            formDelete.submit();
-        }
-    }));
-
-    /*if(confirm('¿Seguro que quieres borrar la noticia: "título de la noticia"?')) {
-        console.log('has confirmado');
-        formDelete.action = 'https://dwestarde.hopto.org/laraveles/blogApp/public/blog/1';
-        formDelete.submit();
-    } else {
-        console.log('no has confirmado');
-    }*/
-</script>
 
 <hr>
 
