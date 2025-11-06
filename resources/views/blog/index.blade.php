@@ -11,7 +11,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        ¿Seguro que quieres borrar la noticia <span id="modal-news-title"></span>?
+        ¿Seguro que quieres borrar la noticia <span id="modal-news-title">XXX</span>?
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
