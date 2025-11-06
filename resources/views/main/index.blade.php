@@ -23,6 +23,7 @@
                 <text x="5%" y="30%" fill="#eceeef"
                     dy=".3em" style="font-weight: bold; font-size: 1.5rem;">{{ $blog->title }}</text>
             </svg>-->
+            <!-- route('image.view', $blog->id) -->
             <svg aria-label="Placeholder: Thumbnail" class="bd-placeholder-img card-img-top"
                 height="225" preserveAspectRatio="xMidYMid slice" role="img" width="100%"
                 xmlns="http://www.w3.org/2000/svg"

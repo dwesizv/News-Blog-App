@@ -1,7 +1,7 @@
 @extends('template.base')
 
 @section('content')
-<form action="{{ route('blog.update', $blog->id) }}" method="post">
+<form action="{{ route('blog.update', $blog->id) }}" method="post" enctype="multipart/form-data">
     @csrf
     @method('put')
     <div>
@@ -23,6 +23,17 @@
     <div>
         <label for="genre">Genre:</label>
         <input class="form-control" required id="genre" minlength="4" maxlength="100" type="text" name="genre" placeholder="Genre of the post" value="{{ old('genre', $blog->genre) }}">
+    </div>
+    <div>
+        <label for="image">Image:</label>
+        <input class="form-control" id="image" type="file" name="image" accept="image/*">
+    </div>
+    <div>
+        <div class="form-check form-switch">
+            <label for="deleteimage" class="form-check-label">Delete image:</label>
+            <input type="checkbox" class="form-check-input" id="deleteimage" name="deleteimage" value="delete">
+        </div>
+        <img src="{{route('image.view', $blog->id)}}?r={{rand(1, 1000)}}" width="140px">
     </div>
     <div class="upper-space" style="padding-top: 16px;">
         <input class="btn btn-primary" type="submit" value="Edit post">

@@ -51,10 +51,13 @@ class BlogController extends Controller {
     }
 
     private function upload(Request $request, $id) {
-        $image = $request->file('image');
-        $fileName = $id . '.' . $image->getClientOriginalExtension();
-        $path = $image->storeAs('images', $fileName, 'public');
-        $path = $image->storeAs('images', $fileName, 'local');
+        $path = null;
+        if($request->hasFile('image') && $request->file('image')->isValid()) {
+            $image = $request->file('image');
+            $fileName = $id . '.' . $image->getClientOriginalExtension();
+            $path = $image->storeAs('images', $fileName, 'public');
+            $path = $image->storeAs('images', $fileName, 'local');
+        }
         return $path;
         //dd([storage_path('app/public') . '/' . $path1, storage_path('app/private') . '/' . $path2]);
     }
@@ -79,8 +82,17 @@ class BlogController extends Controller {
     }
 
     function update(Request $request, Blog $blog) {
+        //dd($request);
         $result = false;
+        if ($request->deleteimage == 'delete') {
+            $blog->path = null;
+        }
         try {
+            // $result = $blog->update($request->all());
+            $path = $this->upload($request, $blog->id);
+            if ($path != null) {
+                $blog->path = $path;
+            }
             $result = $blog->update($request->all());
             $message = 'The new has been edited.';
         } catch(UniqueConstraintViolationException $e) {

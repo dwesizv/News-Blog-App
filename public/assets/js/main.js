@@ -1,6 +1,8 @@
-const formDelete = document.getElementById('form-delete');
-
+const deleteModal = document.getElementById('deleteModal');
 const elements = document.querySelectorAll('.btn-delete');
+const formDelete = document.getElementById('form-delete');
+const spanModalNewsTitle = document.getElementById('modal-news-title');
+
 elements.forEach(el => el.addEventListener('click', event => {
     if(confirm('¿Seguro que quieres borrar la noticia: ' + event.target.dataset.title + '?')) {
         formDelete.action = event.target.dataset.href;
@@ -8,20 +10,7 @@ elements.forEach(el => el.addEventListener('click', event => {
     }
 }));
 
-const deleteModal = document.getElementById('deleteModal');
-const spanModalNewsTitle = document.getElementById('modal-news-title');
-deleteModal.addEventListener('show.bs.modal', event =>{
-    const itemClick = event.relatedTarget;
-    const title = itemClick.dataset.title;
-    const href = itemClick.dataset.href;
-    formDelete.action = href;
-    spanModalNewsTitle.textContent = title;
+deleteModal.addEventListener('show.bs.modal', event => {
+    formDelete.action = event.relatedTarget.dataset.href;
+    spanModalNewsTitle.textContent = event.relatedTarget.dataset.title;
 });
-
-/*if(confirm('¿Seguro que quieres borrar la noticia: "título de la noticia"?')) {
-    console.log('has confirmado');
-    formDelete.action = 'https://dwestarde.hopto.org/laraveles/blogApp/public/blog/1';
-    formDelete.submit();
-} else {
-    console.log('no has confirmado');
-}*/
