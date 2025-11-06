@@ -8,6 +8,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class BlogController extends Controller {
@@ -24,7 +25,14 @@ class BlogController extends Controller {
     }
 
     function store(Request $request): RedirectResponse {
-        //eloquent
+        $request->validate([
+            'title'  => 'required|min:4|max:60|string',
+            'entry'  => 'required|min:20|max:250',
+            'author' => 'required|min:4|max:100',
+            'text'   => 'required|min:40',
+            'genre'  => 'required|min:4|max:100',
+            'image'  => 'nullable|image|max:1024',
+        ]);
         $result = false;
         $blog = new Blog($request->all());
         try {
@@ -85,6 +93,8 @@ class BlogController extends Controller {
         //dd($request);
         $result = false;
         if ($request->deleteimage == 'delete') {
+            $this->destroyImage(storage_path(storage_path('app/public') . '/' . $blog->path));
+            $this->destroyImage(storage_path(storage_path('app/private') . '/' . $blog->path));
             $blog->path = null;
         }
         try {
@@ -111,6 +121,10 @@ class BlogController extends Controller {
             return back()->withInput()->withErrors($messageArray);
         }
     }
+
+    private function destroyImage($file) {
+        Storage::delete($file);
+    } 
 
     function update2(Request $request, Blog $blog) {
         dd([$request, $blog]);
