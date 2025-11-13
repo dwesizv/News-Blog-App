@@ -5,26 +5,44 @@
     <!-- enctype="application/x-www-form-urlencoded" -->
     @csrf
     <div>
+        @error('title')
+        <div class="alert alert-danger">{{ $message }}</div>
+        @enderror
         <label for="title">Title:</label>
-        <input class="form-control" required id="title" minlength="4" maxlength="60" type="text" name="title" placeholder="Title of the post" value="{{ old('title') }}">
+        <input class="form-control" required id="title" minlength="1" maxlength="60" type="text" name="title" placeholder="Title of the post" value="{{ old('title') }}">
     </div>
     <div>
+        @error('entry')
+        <div class="alert alert-danger">{{ $message }}</div>
+        @enderror
         <label for="entry">Entry:</label>
-        <input class="form-control" required id="entry" minlength="20" maxlength="250" type="text" name="entry" placeholder="Entry of the post" value="{{ old('entry') }}">
+        <input class="form-control" required id="entry" minlength="1" maxlength="250" type="text" name="entry" placeholder="Entry of the post" value="{{ old('entry') }}">
     </div>
     <div>
+        @error('text')
+        <div class="alert alert-danger">{{ $message }}</div>
+        @enderror
         <label for="text">Text:</label>
-        <textarea cols="60" rows="8" class="form-control" minlength="40" required id="text" name="text" placeholder="Text of the post">{{ old('text') }}</textarea>
+        <textarea cols="60" rows="8" class="form-control" minlength="1" required id="text" name="text" placeholder="Text of the post">{{ old('text') }}</textarea>
     </div>
     <div>
+        @error('author')
+        <div class="alert alert-danger">{{ $message }}</div>
+        @enderror
         <label for="author">Author:</label>
-        <input class="form-control" required id="author" minlength="4" maxlength="100" type="text" name="author" placeholder="Author of the post" value="{{ old('author') }}">
+        <input class="form-control" required id="author" minlength="1" maxlength="100" type="text" name="author" placeholder="Author of the post" value="{{ old('author') }}">
     </div>
     <div>
+        @error('genre')
+        <div class="alert alert-danger">{{ $message }}</div>
+        @enderror
         <label for="genre">Genre:</label>
-        <input class="form-control" required id="genre" minlength="4" maxlength="100" type="text" name="genre" placeholder="Genre of the post" value="{{ old('genre') }}">
+        <input class="form-control" required id="genre" minlength="1" maxlength="100" type="text" name="genre" placeholder="Genre of the post" value="{{ old('genre') }}">
     </div>
     <div>
+        @error('image')
+        <div class="alert alert-danger">{{ $message }}</div>
+        @enderror
         <label for="image">Image:</label>
         <input class="form-control" id="image" type="file" name="image" accept="image/*">
         <!-- mimetypes -->

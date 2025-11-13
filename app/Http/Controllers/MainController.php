@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Blog;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class MainController extends Controller {
 
@@ -44,4 +46,15 @@ class MainController extends Controller {
         return view('main.index', $array);
     }
 
+    function imagenes(): View {
+        return view('main.imagenes');
+    }
+
+    function privada(): BinaryFileResponse {
+        return response()->file(storage_path('app/private/images/image.jpg'));
+    }
+
+    function privadaPhp() {
+        readfile(storage_path('app/private/images/image.jpg'));
+    }
 }

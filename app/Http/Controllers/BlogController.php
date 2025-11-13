@@ -9,6 +9,7 @@ use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 
 class BlogController extends Controller {
@@ -25,14 +26,30 @@ class BlogController extends Controller {
     }
 
     function store(Request $request): RedirectResponse {
-        $request->validate([
+        /*$result = $request->validate([
             'title'  => 'required|min:4|max:60|string',
             'entry'  => 'required|min:20|max:250',
             'author' => 'required|min:4|max:100',
             'text'   => 'required|min:40',
             'genre'  => 'required|min:4|max:100',
-            'image'  => 'nullable|image|max:1024',
-        ]);
+            'image'  => 'nullable|image|max:1',
+        ]);*/
+        /*$rules = [
+            'title'  => 'required|min:4|max:60|string',
+            'text'   => 'required|min:40',
+        ];
+        $messages = [
+            'title.required' => 'El campo título es obligatorio.',
+            'title.min'      => 'El campo título ha de terner al menos 4 caracteres',
+            'title.max'      => 'a',
+            'title.string'   => 'b',
+            'text.required'  => 'c',
+            'text.min'       => 'd'
+        ];
+        $validator = Validator::make($request->all(), $rules, $messages);
+        if($validator->fails()) {
+            return back()->withInput()->withErrors($validator);
+        }*/
         $result = false;
         $blog = new Blog($request->all());
         try {
