@@ -12,11 +12,21 @@ class Blog extends Model {
     protected $fillable = [
         'author',
         'entry',
-        'genre',
+        'idgenre',
         'path',
         'text',
         'title',
     ];
+
+    
+    function comments() {
+        return $this->hasMany('App\Models\Comment', 'idblog');
+    }
+
+    //dada una noticia blog me va a dar cuál es su género
+    function genre() {
+        return $this->belongsTo('App\Models\Genre', 'idgenre');
+    }
 
     function getPath() {
         $url = url('assets/img/noticia.jpg');

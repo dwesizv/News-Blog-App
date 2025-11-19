@@ -17,10 +17,13 @@ return new class extends Migration
             $table->string('entry', 250);
             $table->longText('text');
             $table->string('author', 100);
-            $table->string('genre', 100);
+            //$table->string('genre', 100);
+            $table->foreignId('idgenre');
             $table->string('path', 100)->nullable();
             $table->timestamps();
             $table->unique(['entry', 'author']);
+            $table->foreign('idgenre')->references('id')->on('genre');
+            //$table->foreign('idauthor')->references('id')->on('author');
         });
     }
 

@@ -4,25 +4,11 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class BlogEditRequest extends FormRequest
-{
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return false;
-    }
+class BlogEditRequest extends BlogCreateRequest {
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
-    public function rules(): array
-    {
-        return [
-            //
-        ];
+    function rules(): array {
+        $rules = parent::rules();
+        $rules['title'] = 'required|min:4|max:60|string|unique:blog,title,' . $this->id;
+        return $rules;
     }
 }

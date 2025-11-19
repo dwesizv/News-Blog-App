@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BlogCreateRequest;
+use App\Http\Requests\BlogEditRequest;
 use App\Models\Blog;
 use Carbon\Carbon;
 use Illuminate\Database\QueryException;
@@ -10,6 +12,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class BlogController extends Controller {
@@ -18,14 +21,13 @@ class BlogController extends Controller {
         $blogs = Blog::all();//select * from blog;
         $array = ['blogs' => $blogs];
         return view('blog.index', $array);
-        //return view('blog.index', compact('blogs'));
     }
 
     function create(): View {
         return view('blog.create');
     }
 
-    function store(Request $request): RedirectResponse {
+    function store(BlogCreateRequest $request): RedirectResponse {
         /*$result = $request->validate([
             'title'  => 'required|min:4|max:60|string',
             'entry'  => 'required|min:20|max:250',
@@ -50,13 +52,30 @@ class BlogController extends Controller {
         if($validator->fails()) {
             return back()->withInput()->withErrors($validator);
         }*/
+        $rules = [
+            'author' => [
+                'min:20',
+                Rule::unique('blog')
+                    ->where(function ($query) use ($request) {
+                        return $query->where('entry', $request->author);
+                    }),
+            ],
+        ];
+        $validator = Validator::make($request->all(), $rules, []);
+        if($validator->fails()) {
+            $messages = [
+                'entry' => 'clave unica violada',
+                'author' => 'clave unica violada'
+            ];
+            return back()->withInput()->withErrors($messages);
+        }
         $result = false;
         $blog = new Blog($request->all());
         try {
-            $result = $blog->save(); //insert into blog ...
+            $result = $blog->save();
             $path = $this->upload($request, $blog->id);
             $blog->path = $path;
-            $result = $blog->save(); //update ...
+            $result = $blog->save();
             $message = 'The new has been added.';
         } catch(UniqueConstraintViolationException $e) {
             $message = 'The same author could not write the same entry.';
@@ -75,7 +94,7 @@ class BlogController extends Controller {
         }
     }
 
-    private function upload(Request $request, $id) {
+    private function upload(Request $request, $id): string {
         $path = null;
         if($request->hasFile('image') && $request->file('image')->isValid()) {
             $image = $request->file('image');
@@ -84,7 +103,6 @@ class BlogController extends Controller {
             $path = $image->storeAs('images', $fileName, 'local');
         }
         return $path;
-        //dd([storage_path('app/public') . '/' . $path1, storage_path('app/private') . '/' . $path2]);
     }
 
     function show(Blog $blog): View {
@@ -92,8 +110,7 @@ class BlogController extends Controller {
         return view('blog.show', ['blog' => $blog, 'year' => $year]);
     }
 
-    //no me llega el blog
-    function show2($id): View {//Blog $blog
+    function show2($id): View {
         $blog = Blog::find($id);
         if($blog == null) {
             abort(404);
@@ -102,12 +119,11 @@ class BlogController extends Controller {
         }
     }
 
-    function edit(Blog $blog) {
+    function edit(Blog $blog): View {
         return view('blog.edit', ['blog' => $blog]);
     }
 
-    function update(Request $request, Blog $blog) {
-        //dd($request);
+    function update(BlogEditRequest $request, Blog $blog): RedirectResponse {
         $result = false;
         if ($request->deleteimage == 'delete') {
             $this->destroyImage(storage_path(storage_path('app/public') . '/' . $blog->path));
@@ -139,25 +155,11 @@ class BlogController extends Controller {
         }
     }
 
-    private function destroyImage($file) {
+    private function destroyImage($file): void {
         Storage::delete($file);
     } 
 
-    function update2(Request $request, Blog $blog) {
-        dd([$request, $blog]);
-        //1º
-        $blog->fill($request->all());
-        $result = $blog->save();//update
-        //2º
-        $result = $blog->update($request->all());//update
-        //3º
-        $author = $blog->author;
-        //$blog->fill($request->all());
-        $blog->author = $author;
-        $result = $blog->save();//update
-    }
-
-    function destroy(Blog $blog) {
+    function destroy(Blog $blog): RedirectResponse {
         try {
             $result = $blog->delete();
             $message = 'The new has been deleted.';
