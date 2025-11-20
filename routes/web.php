@@ -17,6 +17,12 @@ Route::get('privadaPhp', [MainController::class, 'privadaPhp'])->name('privadaPh
 
 // blog controller
 Route::resource('blog', BlogController::class);
+Route::resource('genre', GenreController::class);
+Route::get('blog/genre/{genre}', [BlogController::class, 'genre'])->name('blog.genre');
+//para ver las noticias de un género
+// /genre/{genre}
+// /genre/{genre}/all/
+// blog/genre/{genre}
 //resource - recurso
 //1Route::get('blog', [BlogController::class, 'index'])->name('blog.index');
 //2Route::post('blog', [BlogController::class, 'store'])->name('blog.store');

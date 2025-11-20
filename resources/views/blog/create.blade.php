@@ -33,11 +33,26 @@
         <input class="form-control" required id="author" minlength="1" maxlength="100" type="text" name="author" placeholder="Author of the post" value="{{ old('author') }}">
     </div>
     <div>
-        @error('genre')
+        @error('idgenre')
         <div class="alert alert-danger">{{ $message }}</div>
         @enderror
-        <label for="genre">Genre:</label>
-        <input class="form-control" required id="genre" minlength="1" maxlength="100" type="text" name="genre" placeholder="Genre of the post" value="{{ old('genre') }}">
+        <label for="idgenre">Genre:</label>
+        <!--<input class="form-control" required id="genre" minlength="1" maxlength="100" type="text" name="genre" placeholder="Genre of the post" value="{{ old('genre') }}">-->
+        <!-- The second value will be selected initially -->
+        <select required name="idgenre" id="idgenre" class="form-control">
+            <option value=""
+                @if(old('idgenre') == null)
+                    selected
+                @endif
+            disabled>Selecciona una opción...</option>
+            @foreach($genres as $i => $genre)
+                <option value="{{ $i }}"
+                    @if($i == old('idgenre'))
+                        selected
+                    @endif
+                >{{ $genre }}</option>
+            @endforeach
+        </select>
     </div>
     <div>
         @error('image')

@@ -10,7 +10,7 @@ class BlogCreateRequest extends FormRequest {
         return [
             'author'=> 'autor del artículo',
             'entry' => 'cabecera del artículo',
-            'genre' => 'género del artículo',
+            'idgenre' => 'género del artículo',
             'image' => 'imagen del artículo',
             'text'  => 'texto del artículo',
             'title' => 'título del artículo',
@@ -45,9 +45,9 @@ class BlogCreateRequest extends FormRequest {
             'author.max'      => $max,
             'text.required'   => $required,
             'text.min'        => $min,
-            'genre.required'  => $required,
-            'genre.min'       => $min,
-            'genre.max'       => $max,
+            'idgenre.required'  => $required,
+            // 'genre.min'       => $min,
+            // 'genre.max'       => $max,
             'image.image'     => $image,
             'image.max'       => $maxFile,
         ];
@@ -59,7 +59,7 @@ class BlogCreateRequest extends FormRequest {
             'entry'  => 'required|min:1|max:250',
             'author' => 'required|min:1|max:100',
             'text'   => 'required|min:40',
-            'genre'  => 'required|min:1|max:100',
+            'idgenre'  => 'required',
             'image'  => 'nullable|image|max:1024',
         ];
     }

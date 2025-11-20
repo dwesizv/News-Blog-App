@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\BlogCreateRequest;
 use App\Http\Requests\BlogEditRequest;
 use App\Models\Blog;
+use App\Models\Genre;
 use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\UniqueConstraintViolationException;
@@ -24,7 +25,9 @@ class BlogController extends Controller {
     }
 
     function create(): View {
-        return view('blog.create');
+        // $genres1 = Genre::all();
+        $genres = Genre::pluck('name', 'id');
+        return view('blog.create', ['genres' => $genres]);
     }
 
     function store(BlogCreateRequest $request): RedirectResponse {
@@ -120,7 +123,12 @@ class BlogController extends Controller {
     }
 
     function edit(Blog $blog): View {
-        return view('blog.edit', ['blog' => $blog]);
+        $genres = Genre::pluck('name', 'id');
+        return view('blog.edit',
+            [
+                'blog'   => $blog,
+                'genres' => $genres, 
+        ]);
     }
 
     function update(BlogEditRequest $request, Blog $blog): RedirectResponse {
@@ -174,6 +182,20 @@ class BlogController extends Controller {
             return redirect()->route('blog.index')->with($messageArray);
         } else {
             return back()->withInput()->withErrors($messageArray);
+        }
+    }
+
+    function genre(Genre $genre) {
+        // select from blog where idgenre = $genre->id;
+        return view('blog.genre', ['genre' => $genre, 'blogs' => $genre->blogs]);
+    }
+
+    function genre2($idgenre) {
+        $genre = Genre::find($idgenre);
+        if($genre == null) {
+            abort(404);
+        } else {
+            return view('', []);
         }
     }
 }

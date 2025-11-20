@@ -21,8 +21,22 @@
         <input readonly disabled class="form-control" required id="author" minlength="4" maxlength="100" type="text" name="author" placeholder="Author of the post" value="{{ old('author', $blog->author) }}">
     </div>
     <div>
-        <label for="genre">Genre:</label>
-        <input class="form-control" required id="genre" minlength="4" maxlength="100" type="text" name="genre" placeholder="Genre of the post" value="{{ old('genre', $blog->genre) }}">
+        <label for="idgenre">Genre:</label>
+        <!--<input class="form-control" required id="genre" minlength="4" maxlength="100" type="text" name="genre" placeholder="Genre of the post" value="{{ old('genre', $blog->genre) }}">-->
+        <select required name="idgenre" id="idgenre" class="form-control">
+            <option value=""
+                @if(old('idgenre', $blog->idgenre) == null)
+                    selected
+                @endif
+            disabled>Selecciona una opción...</option>
+            @foreach($genres as $i => $genre)
+                <option value="{{ $i }}"
+                    @if($i == old('idgenre', $blog->idgenre))
+                        selected
+                    @endif
+                >{{ $genre }}</option>
+            @endforeach
+        </select>
     </div>
     <div>
         <label for="image">Image:</label>

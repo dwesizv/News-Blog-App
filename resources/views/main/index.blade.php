@@ -1,7 +1,8 @@
 @extends('template.base')
 
 @section('content')
-    
+
+@yield('anytitle')
 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
     @foreach($blogs as $blog)
     <div class="col">

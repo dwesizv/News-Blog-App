@@ -26,7 +26,7 @@
                     </span>
                     <span class="meta">
                         Genre:
-                        <a href="#!">{{ $blog->genre }}</a>
+                        <a href="{{ route('blog.genre', $blog->idgenre) }}">{{ $blog->genre->name }}</a>
                     </span>
                 </div>
             </div>

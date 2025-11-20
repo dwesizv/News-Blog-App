@@ -68,8 +68,6 @@
         </div>
         @endif
 
-        {{ $general??'sin error' }}
-
         @yield('content')
 
       </div>
