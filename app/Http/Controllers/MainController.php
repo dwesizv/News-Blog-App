@@ -54,7 +54,7 @@ class MainController extends Controller {
         return response()->file(storage_path('app/private/images/image.jpg'));
     }
 
-    function privadaPhp() {
+    function privadaPhp(): Response {
         readfile(storage_path('app/private/images/image.jpg'));
     }
 }

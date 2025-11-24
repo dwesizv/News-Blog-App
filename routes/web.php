@@ -8,21 +8,21 @@ use Rap2hpoutre\LaravelLogViewer\LogViewerController;
 
 // main controller
 Route::get('/', [MainController::class, 'index'])->name('main.index');
-Route::get('copy', [MainController::class, 'copy'])->name('main.copy');
+
+// image controller
 Route::get('image/{id}', [ImageController::class, 'view'])->name('image.view');
-Route::get('logs', [LogViewerController::class, 'index']);
-Route::get('imagenes', [MainController::class, 'imagenes'])->name('imagenes');
-Route::get('privada', [MainController::class, 'privada'])->name('privada');
-Route::get('privadaPhp', [MainController::class, 'privadaPhp'])->name('privadaPhp');
 
 // blog controller
 Route::resource('blog', BlogController::class);
 Route::resource('genre', GenreController::class);
 Route::get('blog/genre/{genre}', [BlogController::class, 'genre'])->name('blog.genre');
-//para ver las noticias de un género
-// /genre/{genre}
-// /genre/{genre}/all/
-// blog/genre/{genre}
+
+// otras
+Route::get('copy', [MainController::class, 'copy'])->name('main.copy');
+Route::get('imagenes', [MainController::class, 'imagenes'])->name('imagenes');
+Route::get('logs', [LogViewerController::class, 'logs']);
+Route::get('privada', [MainController::class, 'privada'])->name('privada');
+Route::get('privadaPhp', [MainController::class, 'privadaPhp'])->name('privadaPhp');
 //resource - recurso
 //1Route::get('blog', [BlogController::class, 'index'])->name('blog.index');
 //2Route::post('blog', [BlogController::class, 'store'])->name('blog.store');

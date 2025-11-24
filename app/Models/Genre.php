@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Genre extends Model {
     
@@ -10,8 +11,7 @@ class Genre extends Model {
     public $timestamps = false;
     protected $fillable = ['name'];
 
-    //dada una genero me va a dar todos sus blogs
-    function blogs() {
+    function blogs(): HasMany {
         return $this->hasMany('App\Models\Blog', 'idgenre');
     }
 }

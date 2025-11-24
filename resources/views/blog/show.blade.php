@@ -8,7 +8,6 @@
 @php
 //use Carbon\Carbon;
 @endphp
-<!-- $blog->getPath() -->
 <header class="masthead" style="background-image: url('{{ route('image.view', $blog->id) }}')">
     <div class="container position-relative px-4 px-lg-5">
         <div class="row gx-4 gx-lg-5 justify-content-center">

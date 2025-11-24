@@ -18,28 +18,88 @@ use Illuminate\View\View;
 
 class BlogController extends Controller {
 
-    function index(): View {
-        $blogs = Blog::all();//select * from blog;
-        $array = ['blogs' => $blogs];
-        return view('blog.index', $array);
-    }
-
     function create(): View {
-        // $genres1 = Genre::all();
         $genres = Genre::pluck('name', 'id');
         return view('blog.create', ['genres' => $genres]);
     }
 
-    function store(BlogCreateRequest $request): RedirectResponse {
-        /*$result = $request->validate([
+    function destroy(Blog $blog): RedirectResponse {
+        try {
+            $result = $blog->delete();
+            $message = 'The new has been deleted.';
+        } catch(\Exception $e) {
+            $result = false;
+            $message = 'The new has not been deleted.';
+        }
+        $messageArray = [
+            'general' => $message
+        ];
+        if($result) {
+            return redirect()->route('blog.index')->with($messageArray);
+        } else {
+            return back()->withInput()->withErrors($messageArray);
+        }
+    }
+    private function destroyImage($file): void {
+        Storage::delete($file);
+    }
+
+    function edit(Blog $blog): View {
+        $genres = Genre::pluck('name', 'id');
+        return view('blog.edit', [
+            'blog'   => $blog,
+            'genres' => $genres, 
+        ]);
+    }
+
+    function genre(Genre $genre): View {
+        return view('blog.genre', ['genre' => $genre, 'blogs' => $genre->blogs]);
+    }
+
+    function genre2($idgenre): View {
+        $genre = Genre::find($idgenre);
+        if($genre == null) {
+            abort(404);
+        } else {
+            return view('', []);
+        }
+    }
+
+    function index(): View {
+        $blogs = Blog::all();
+        $array = ['blogs' => $blogs];
+        return view('blog.index', $array);
+    }
+
+    function show(Blog $blog): View {
+        $year = Carbon::now()->year;
+        return view('blog.show', ['blog' => $blog, 'year' => $year]);
+    }
+
+    function show2($id): View {
+        $blog = Blog::find($id);
+        if($blog == null) {
+            abort(404);
+        } else {
+            return view('blog.show', ['blog' => $blog]);
+        }
+    }
+
+    /**
+     * Tres formas de validación:
+     * 1. Directamente en el método, con $request->validate([...])
+     * primera forma: sencilla pero sin poder personalizar los mensajes
+        $validatedData = $request->validate([
             'title'  => 'required|min:4|max:60|string',
             'entry'  => 'required|min:20|max:250',
             'author' => 'required|min:4|max:100',
             'text'   => 'required|min:40',
             'genre'  => 'required|min:4|max:100',
             'image'  => 'nullable|image|max:1',
-        ]);*/
-        /*$rules = [
+        ]);
+     * 2. Creando un FormRequest (BlogCreateRequest) y usándolo como tipo del parámetro $request
+     * 3. Creando un validador manual, personalizando los mensajes, combrobando si falla
+       $rules = [
             'title'  => 'required|min:4|max:60|string',
             'text'   => 'required|min:40',
         ];
@@ -54,7 +114,10 @@ class BlogController extends Controller {
         $validator = Validator::make($request->all(), $rules, $messages);
         if($validator->fails()) {
             return back()->withInput()->withErrors($validator);
-        }*/
+        }
+     */
+    function store(BlogCreateRequest $request): RedirectResponse {
+        // validando clave única compuesta
         $rules = [
             'author' => [
                 'min:20',
@@ -97,40 +160,6 @@ class BlogController extends Controller {
         }
     }
 
-    private function upload(Request $request, $id): string {
-        $path = null;
-        if($request->hasFile('image') && $request->file('image')->isValid()) {
-            $image = $request->file('image');
-            $fileName = $id . '.' . $image->getClientOriginalExtension();
-            $path = $image->storeAs('images', $fileName, 'public');
-            $path = $image->storeAs('images', $fileName, 'local');
-        }
-        return $path;
-    }
-
-    function show(Blog $blog): View {
-        $year = Carbon::now()->year;
-        return view('blog.show', ['blog' => $blog, 'year' => $year]);
-    }
-
-    function show2($id): View {
-        $blog = Blog::find($id);
-        if($blog == null) {
-            abort(404);
-        } else {
-            return view('blog.show', ['blog' => $blog]);
-        }
-    }
-
-    function edit(Blog $blog): View {
-        $genres = Genre::pluck('name', 'id');
-        return view('blog.edit',
-            [
-                'blog'   => $blog,
-                'genres' => $genres, 
-        ]);
-    }
-
     function update(BlogEditRequest $request, Blog $blog): RedirectResponse {
         $result = false;
         if ($request->deleteimage == 'delete') {
@@ -139,7 +168,6 @@ class BlogController extends Controller {
             $blog->path = null;
         }
         try {
-            // $result = $blog->update($request->all());
             $path = $this->upload($request, $blog->id);
             if ($path != null) {
                 $blog->path = $path;
@@ -163,39 +191,15 @@ class BlogController extends Controller {
         }
     }
 
-    private function destroyImage($file): void {
-        Storage::delete($file);
-    } 
-
-    function destroy(Blog $blog): RedirectResponse {
-        try {
-            $result = $blog->delete();
-            $message = 'The new has been deleted.';
-        } catch(\Exception $e) {
-            $result = false;
-            $message = 'The new has not been deleted.';
+    private function upload(Request $request, $id): string {
+        $path = null;
+        if($request->hasFile('image') && $request->file('image')->isValid()) {
+            $image = $request->file('image');
+            $fileName = $id . '.' . $image->getClientOriginalExtension();
+            $path = $image->storeAs('images', $fileName, 'public');
+            $path = $image->storeAs('images', $fileName, 'local');
         }
-        $messageArray = [
-            'general' => $message
-        ];
-        if($result) {
-            return redirect()->route('blog.index')->with($messageArray);
-        } else {
-            return back()->withInput()->withErrors($messageArray);
-        }
+        return $path;
     }
 
-    function genre(Genre $genre) {
-        // select from blog where idgenre = $genre->id;
-        return view('blog.genre', ['genre' => $genre, 'blogs' => $genre->blogs]);
-    }
-
-    function genre2($idgenre) {
-        $genre = Genre::find($idgenre);
-        if($genre == null) {
-            abort(404);
-        } else {
-            return view('', []);
-        }
-    }
 }

@@ -4,62 +4,30 @@ namespace App\Http\Controllers;
 
 use App\Models\Comment;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;;
 
-class CommentController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
+class CommentController extends Controller {
+
+    function create(): View {
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+    function destroy(Comment $comment): RedirectResponse {
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+    function edit(Comment $comment): View {
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Comment $comment)
-    {
-        //
+    function index(): View {
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Comment $comment)
-    {
-        //
+    function show(Comment $comment): View {
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Comment $comment)
-    {
-        //
+    function store(Request $request): RedirectResponse {
     }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Comment $comment)
-    {
-        //
+    
+    function update(Request $request, Comment $comment): RedirectResponse {
     }
+    
 }

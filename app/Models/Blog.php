@@ -3,12 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Blog extends Model {
 
     protected $table = 'blog';
 
-    //los campos que se rellenan manualmente
     protected $fillable = [
         'author',
         'entry',
@@ -19,16 +20,15 @@ class Blog extends Model {
     ];
 
     
-    function comments() {
+    function comments(): HasMany {
         return $this->hasMany('App\Models\Comment', 'idblog');
     }
 
-    //dada una noticia blog me va a dar cuál es su género
-    function genre() {
+    function genre(): BelongsTo {
         return $this->belongsTo('App\Models\Genre', 'idgenre');
     }
 
-    function getPath() {
+    function getPath(): string {
         $url = url('assets/img/noticia.jpg');
         if($this->path != null) {
             $url = url('storage/' . $this->path);

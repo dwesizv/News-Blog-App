@@ -4,62 +4,29 @@ namespace App\Http\Controllers;
 
 use App\Models\Genre;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;;
 
-class GenreController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
+class GenreController extends Controller {
+
+    function create(): View {
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+    function destroy(Genre $genre): RedirectResponse {
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+    function edit(Genre $genre): View {
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Genre $genre)
-    {
-        //
+    function index(): View {
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Genre $genre)
-    {
-        //
+    function show(Genre $genre): View {
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Genre $genre)
-    {
-        //
+    function store(Request $request): RedirectResponse {
     }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Genre $genre)
-    {
-        //
+    
+    function update(Request $request, Genre $genre): RedirectResponse {
     }
 }

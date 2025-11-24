@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Comment extends Model {
 
     protected $table = 'comment';
     protected $fillable = ['idblog', 'commentator',  'content'];
 
-    function blog() {
+    function blog(): BelongsTo {
         return $this->belongsTo('App\Models\Blog', 'idblog');
     }
 }
