@@ -31,12 +31,12 @@
                 @endif
             >👌</option>
             <option value="0"
-                @if('0' === old('liked', $comment->liked))
+                @if(0 === old('liked', $comment->liked))
                     selected
                 @endif
             >👎</option>
             <option value="1"
-                @if('1' === old('idgenre', $comment->liked))
+                @if(1 === old('liked', $comment->liked))
                     selected
                 @endif
             >👍</option>

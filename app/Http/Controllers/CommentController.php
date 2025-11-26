@@ -26,6 +26,7 @@ class CommentController extends Controller {
     }
 
     function store(Request $request): RedirectResponse {
+        //dd($request);
         $result = false;
         $comment = new Comment($request->all());
         try {
@@ -49,7 +50,9 @@ class CommentController extends Controller {
     function update(Request $request, Comment $comment): RedirectResponse {
         $result = false;
         try {
-            $result = $comment->update($request->all());
+            $comment->fill($request->all());
+            $result = $comment->save();
+            //$result = $comment->update($request->all());
             $message = 'The comment has been edited.';
         } catch(\Exception $e) {
             $message = 'Se ha producido un error, en caso de que persista, consulte al administrador.';

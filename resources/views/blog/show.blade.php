@@ -49,9 +49,9 @@
                 @foreach($blog->comments as $comment)
                     <p>
                         {{ $comment->content }}
-                        @if($comment->liked == 1)
+                        @if($comment->liked === 1)
                             👍
-                        @elseif($comment->liked == 0)
+                        @elseif($comment->liked === 0)
                             👎
                         @else
                             👌

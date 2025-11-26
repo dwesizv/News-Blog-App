@@ -32,7 +32,7 @@
                 @endif
             >👎</option>
             <option value="1"
-                @if('1' === old('idgenre'))
+                @if('1' === old('liked'))
                     selected
                 @endif
             >👍</option>

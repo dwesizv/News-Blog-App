@@ -12,7 +12,7 @@ return new class extends Migration {
             $table->foreignId('idblog');
             $table->string('commentator', 100);
             $table->text('content');
-            $table->boolean('like')->nullable();
+            $table->boolean('liked')->nullable();
             $table->timestamps();
             $table->foreign('idblog')->references('id')->on('blog');
         });
