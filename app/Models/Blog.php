@@ -24,6 +24,7 @@ class Blog extends Model {
         return $this->hasMany('App\Models\Comment', 'idblog');
     }
 
+    //usado
     function genre(): BelongsTo {
         return $this->belongsTo('App\Models\Genre', 'idgenre');
     }

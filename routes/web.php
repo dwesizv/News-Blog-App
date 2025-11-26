@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\MainController;
 use Illuminate\Support\Facades\Route;
@@ -16,6 +17,11 @@ Route::get('image/{id}', [ImageController::class, 'view'])->name('image.view');
 Route::resource('blog', BlogController::class);
 Route::resource('genre', GenreController::class);
 Route::get('blog/genre/{genre}', [BlogController::class, 'genre'])->name('blog.genre');
+
+// commment controller
+Route::post('comment', [CommentController::class, 'store'])->name('comment.store');
+Route::get('comment/{comment}/edit', [CommentController::class, 'edit'])->name('comment.edit');
+Route::put('comment/{comment}', [CommentController::class, 'update'])->name('comment.update');
 
 // otras
 Route::get('copy', [MainController::class, 'copy'])->name('main.copy');

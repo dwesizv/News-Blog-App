@@ -11,6 +11,7 @@ class Genre extends Model {
     public $timestamps = false;
     protected $fillable = ['name'];
 
+    //usado
     function blogs(): HasMany {
         return $this->hasMany('App\Models\Blog', 'idgenre');
     }

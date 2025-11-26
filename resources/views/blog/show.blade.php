@@ -5,9 +5,6 @@
 @endsection
 
 @section('content')
-@php
-//use Carbon\Carbon;
-@endphp
 <header class="masthead" style="background-image: url('{{ route('image.view', $blog->id) }}')">
     <div class="container position-relative px-4 px-lg-5">
         <div class="row gx-4 gx-lg-5 justify-content-center">
@@ -41,6 +38,38 @@
         </div>
     </div>
 </article>
+<div class="row">
+</div>
+<hr>
+<article class="mb-4">
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <h2>Comentarios</h2>
+                @foreach($blog->comments as $comment)
+                    <p>
+                        {{ $comment->content }}
+                        @if($comment->liked == 1)
+                            👍
+                        @elseif($comment->liked == 0)
+                            👎
+                        @else
+                            👌
+                        @endif
+                        <a href="{{ route('comment.edit', $comment->id) }}">editar commentario</a>
+                    </p>
+                    <p class="text-end">
+                        {{ $comment->commentator }} -
+                        {{ $comment->created_at->format('d/m/Y') }}
+                    </p>
+                    <hr>
+                @endforeach
+                @include('comment.create')
+            </div>
+        </div>
+    </div>
+</article>
+<hr>
 <footer class="border-top">
     <div class="container px-4 px-lg-5">
         <div class="row gx-4 gx-lg-5 justify-content-center">

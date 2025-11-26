@@ -7,18 +7,18 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
 
     function up(): void {
-        Schema::create('comment', function (Blueprint $table) {
+        Schema::create('otro', function (Blueprint $table) {
             $table->id();
             $table->foreignId('idblog');
             $table->string('commentator', 100);
             $table->text('content');
-            $table->boolean('like')->nullable();
+            $table->boolean('liked')->nullable();
             $table->timestamps();
             $table->foreign('idblog')->references('id')->on('blog');
         });
     }
 
     function down(): void {
-        Schema::dropIfExists('comment');
+        Schema::dropIfExists('otro');
     }
 };

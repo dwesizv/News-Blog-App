@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Comment extends Model {
 
     protected $table = 'comment';
-    protected $fillable = ['idblog', 'commentator',  'content'];
+    protected $fillable = ['idblog', 'commentator',  'content', 'liked'];
 
     function blog(): BelongsTo {
         return $this->belongsTo('App\Models\Blog', 'idblog');
