@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Custom\SentComments;
 use App\Http\Requests\BlogCreateRequest;
 use App\Http\Requests\BlogEditRequest;
 use App\Models\Blog;
@@ -72,8 +73,13 @@ class BlogController extends Controller {
     }
 
     function show(Blog $blog): View {
+        $sentComments = session()->get('sentComments');
+        if($sentComments == null) {
+            $sentComments = new SentComments();
+            session()->put('sentComments', $sentComments);
+        }
         $year = Carbon::now()->year;
-        return view('blog.show', ['blog' => $blog, 'year' => $year]);
+        return view('blog.show', ['blog' => $blog, 'year' => $year, 'sentComments' => $sentComments]);
     }
 
     function show2($id): View {

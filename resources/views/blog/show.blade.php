@@ -56,7 +56,12 @@
                         @else
                             👌
                         @endif
-                        <a href="{{ route('comment.edit', $comment->id) }}">editar commentario</a>
+                        @if($sentComments->isComment($comment))
+                            <a href="{{ route('comment.edit', $comment->id) }}">editar commentario</a>
+                        @endif
+                        @if($comment->isEditable())
+                            <a href="{{ route('comment.edit', $comment->id) }}">editar commentario</a>
+                        @endif
                     </p>
                     <p class="text-end">
                         {{ $comment->commentator }} -

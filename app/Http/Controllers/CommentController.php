@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Custom\SentComments;
 use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
@@ -32,6 +33,8 @@ class CommentController extends Controller {
         try {
             $result = $comment->save();
             $message = 'The comment has been added.';
+            $sentComments = session()->get('sentComments');
+            $sentComments->addComment($comment);
         } catch(\Exception $e) {
             dd($e);
             $message = 'Se ha producido un error.';
@@ -48,6 +51,10 @@ class CommentController extends Controller {
     }
     
     function update(Request $request, Comment $comment): RedirectResponse {
+        $sentComments = session()->get('sentComments');
+        if(!$sentComments->isComment($comment)) {
+            return redirect()->route('main.index');
+        }
         $result = false;
         try {
             $comment->fill($request->all());
