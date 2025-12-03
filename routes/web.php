@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\GenreController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\MainController;
 use Illuminate\Support\Facades\Route;
@@ -24,6 +25,7 @@ Route::get('comment/{comment}/edit', [CommentController::class, 'edit'])->name('
 Route::put('comment/{comment}', [CommentController::class, 'update'])->name('comment.update');
 
 // otras
+Route::get('db', [MainController::class, 'db'])->name('main.db');
 Route::get('copy', [MainController::class, 'copy'])->name('main.copy');
 Route::get('imagenes', [MainController::class, 'imagenes'])->name('imagenes');
 Route::get('logs', [LogViewerController::class, 'logs']);
@@ -37,3 +39,8 @@ Route::get('privadaPhp', [MainController::class, 'privadaPhp'])->name('privadaPh
 //5Route::get('blog/{blog}', [BlogController::class, 'show'])->name('blog.show');
 //6Route::put('blog/{blog}', [BlogController::class, 'update'])->name('blog.update');
 //7Route::delete('blog/{blog}', [BlogController::class, 'destroy'])->name('blog.destroy');
+
+Auth::routes(['verify' => true]);
+Route::get('home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('home/edit', [App\Http\Controllers\HomeController::class, 'edit'])->name('home.edit');
+Route::put('home/update', [App\Http\Controllers\HomeController::class, 'update'])->name('home.update');
