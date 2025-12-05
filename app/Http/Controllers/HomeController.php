@@ -52,7 +52,7 @@ class HomeController extends Controller {
             $user->email_verified_at = null;
             $user->email = $request->email;
         }
-        if($request->password != null) {
+        if($request->password != null && $request->currentpassword != null) {
             $user->password = Hash::make($request->password);
         }
         try {
