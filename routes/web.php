@@ -5,6 +5,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\MainController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Rap2hpoutre\LaravelLogViewer\LogViewerController;
 
@@ -17,6 +18,7 @@ Route::get('image/{id}', [ImageController::class, 'view'])->name('image.view');
 // blog controller
 Route::resource('blog', BlogController::class);
 Route::resource('genre', GenreController::class);
+Route::resource('user', UserController::class);
 Route::get('blog/genre/{genre}', [BlogController::class, 'genre'])->name('blog.genre');
 
 // commment controller

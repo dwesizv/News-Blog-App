@@ -31,12 +31,14 @@ class BlogSeeder extends Seeder
             $id = $ids[$position];
 
             DB::table("blog")->insert([
-                "author"  => $author,
-                "entry"   => $faker->sentence(4),
-                "idgenre" => $id,
-                "path"    => $path,
-                "text"    => $faker->sentence(16),
-                "title"   => $faker->sentence(4)
+                "author"     => $author,
+                "entry"      => $faker->sentence(4),
+                "idgenre"    => $id,
+                "path"       => $path,
+                "text"       => $faker->sentence(16),
+                "title"      => $faker->sentence(4),
+                'created_at' => '2025/12/04 16:37:15',
+                'updated_at' => '2025/12/04 16:37:15',
             ]);
         }
     }

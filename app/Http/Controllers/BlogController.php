@@ -127,12 +127,27 @@ class BlogController extends Controller {
         $rules = [
             'author' => [
                 'min:20',
+                'max:100',
                 Rule::unique('blog')
+                    //$query -> se inyecta la consulta que se debe ejecutar
+                    //Blog::metodo()->where('entry', $request->author)
                     ->where(function ($query) use ($request) {
                         return $query->where('entry', $request->author);
-                    }),
+                }),
             ],
         ];
+        /*$rules = [
+            'entry' => [
+                'min:10',
+                'max:250',
+                Rule::unique('blog')
+                    //$query -> se inyecta la consulta que se debe ejecutar
+                    //Blog::all()->where('entry', $request->author)
+                    ->where(function ($query) use ($request) {
+                        return $query->where('author', $request->entry);
+                    }),
+            ],
+        ];*/
         $validator = Validator::make($request->all(), $rules, []);
         if($validator->fails()) {
             $messages = [

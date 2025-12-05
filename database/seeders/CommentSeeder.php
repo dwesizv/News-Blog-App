@@ -24,6 +24,8 @@ class CommentSeeder extends Seeder
                 "idblog"      => $id,
                 "commentator" => $faker->unique()->firstName(),
                 "content"     => $faker->sentence(16),
+                'created_at'  => '2025/12/04 16:37:15',
+                'updated_at'  => '2025/12/04 16:37:15',
             ]);
         }
     }
