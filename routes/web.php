@@ -11,11 +11,13 @@ use Rap2hpoutre\LaravelLogViewer\LogViewerController;
 
 // main controller
 Route::get('/', [MainController::class, 'index'])->name('main.index');
+Route::get('responsable/{id}', [MainController::class, 'responsable'])->name('main.responsable');
 
 // image controller
 Route::get('image/{id}', [ImageController::class, 'view'])->name('image.view');
 
 // blog controller
+Route::delete('blog/delete/group', [BlogController::class, 'deleteGroup'])->name('blog.delete.group');
 Route::resource('blog', BlogController::class);
 Route::resource('genre', GenreController::class);
 Route::resource('user', UserController::class);

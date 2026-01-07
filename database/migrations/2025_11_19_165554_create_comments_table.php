@@ -10,11 +10,13 @@ return new class extends Migration {
         Schema::create('comment', function (Blueprint $table) {
             $table->id();
             $table->foreignId('idblog');
+            $table->foreignId('iduser');
             $table->string('commentator', 100);
             $table->text('content');
             $table->boolean('liked')->nullable();
             $table->timestamps();
             $table->foreign('idblog')->references('id')->on('blog');
+            $table->foreign('iduser')->references('id')->on('users');
         });
     }
 

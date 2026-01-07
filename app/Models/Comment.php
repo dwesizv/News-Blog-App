@@ -14,6 +14,10 @@ class Comment extends Model {
         return $this->belongsTo('App\Models\Blog', 'idblog');
     }
 
+    function user(): BelongsTo {
+        return $this->belongsTo('App\Models\User', 'iduser');
+    }
+
     function isEditable(): bool {
         $sentComments = session()->get('sentComments');
         return $sentComments->isComment($this);

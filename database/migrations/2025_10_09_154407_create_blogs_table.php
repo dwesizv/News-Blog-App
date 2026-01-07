@@ -15,9 +15,11 @@ return new class extends Migration {
             $table->string('author', 100);
             $table->foreignId('idgenre'); //$table->string('genre', 100);
             $table->string('path', 100)->nullable();
+            $table->foreignId('iduser');
             $table->timestamps();
             $table->unique(['entry', 'author']);
             $table->foreign('idgenre')->references('id')->on('genre');
+            $table->foreign('iduser')->references('id')->on('users');
             //$table->foreign('idauthor')->references('id')->on('author');
         });
     }

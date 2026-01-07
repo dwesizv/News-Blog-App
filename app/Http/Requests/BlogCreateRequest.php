@@ -38,8 +38,6 @@ class BlogCreateRequest extends FormRequest {
             'entry.required'  => $required,
             'entry.min'       => $min,
             'entry.max'       => $max,
-            'entry.unique'    => '',
-            'entry.rule'      => '',
             'author.required' => $required,
             'author.min'      => $min,
             'author.max'      => $max,
@@ -55,12 +53,12 @@ class BlogCreateRequest extends FormRequest {
     
     function rules(): array {
         return [
-            'title'  => 'required|min:4|max:60|string|unique:blog,title',
-            'entry'  => 'required|min:1|max:250',
-            'author' => 'required|min:1|max:100',
-            'text'   => 'required|min:40',
-            'idgenre'  => 'required',
-            'image'  => 'nullable|image|max:1024',
+            'title'   => 'required|min:4|max:60|string',
+            'entry'   => 'required|min:1|max:250',
+            'author'  => 'required|min:1|max:100',
+            'text'    => 'required|min:40',
+            'idgenre' => 'required',
+            'image'   => 'nullable|image|max:1024',
         ];
     }
 }

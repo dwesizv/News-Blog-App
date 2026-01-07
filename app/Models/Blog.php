@@ -14,6 +14,7 @@ class Blog extends Model {
         'author',
         'entry',
         'idgenre',
+        'iduser',
         'path',
         'text',
         'title',
@@ -27,6 +28,10 @@ class Blog extends Model {
     //usado
     function genre(): BelongsTo {
         return $this->belongsTo('App\Models\Genre', 'idgenre');
+    }
+
+    function user(): BelongsTo {
+        return $this->belongsTo('App\Models\User', 'iduser');
     }
 
     function getPath(): string {

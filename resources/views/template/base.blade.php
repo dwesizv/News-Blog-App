@@ -22,7 +22,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{{ route('main.index') }}">Home</a>
+              <a class="nav-link active" aria-current="page" href="{{ route('home') }}">Home</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{{ route('blog.create') }}">Add entry</a>
@@ -41,6 +41,18 @@
                 <li><a class="dropdown-item" href="#">Something else here</a></li>
               </ul>
             </li>
+            @if(Auth::user() != null && Auth::user()->isAdmin())
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                Users
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="{{ route('user.create') }}">Create</a></li>
+                <li><a class="dropdown-item" href="{{ route('user.index') }}">Users</a></li>
+              </ul>
+            </li>
+            @endif
             <li class="nav-item">
               <a class="nav-link disabled">Disabled</a>
             </li>
@@ -50,16 +62,21 @@
             <button class="btn btn-outline-success" type="submit">Search</button>
           </form>
           <ul class="navbar-nav" style="padding-left: 4px;">
+            @guest
             <li class="nav-item">
-              @guest
-                <a class="btn btn-outline-success" href="{{ route('login') }}">Login</a>
-              @else
+              <a class="btn btn-outline-success" href="{{ route('login') }}">Login</a>
+            </li>
+            @else
+              <li class="nav-item">
+                <a class="btn btn-outline-success" href="{{ route('home') }}">{{ Auth::user()->name }}</a>
+              </li>
+              <li class="nav-item">
                 <form method="post" action="{{ route('logout') }}">
                   @csrf
                   <button type="submit" class="btn btn-outline-success">Logout</a>
                 </form>
-              @endguest
-            </li>
+              </li>
+            @endguest
           </ul>
         </div>
       </div>

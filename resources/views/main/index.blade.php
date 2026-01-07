@@ -56,7 +56,10 @@
                         <a href="{{ route('blog.show', $blog->id) }}" class="btn btn-sm btn-outline-secondary">View</a>
                         <a href="{{ route('blog.edit', $blog->id) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
                     </div>
-                    <small class="text-body-secondary">{{ $blog->author }}</small>
+                    <div>
+                        <small class="text-body-secondary">Firmado: {{ $blog->author }}</small>
+                        <small class="text-body-secondary">Responsable: <a href="{{ route('main.responsable', $blog->iduser) }}">{{ $blog->user->name }}</a></small>
+                    </div>
                 </div>
             </div>
         </div>

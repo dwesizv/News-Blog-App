@@ -16,15 +16,38 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Auth;
 
 class BlogController extends Controller {
+
+    function __construct() {
+        //verified -> create, destroy(+), edit(+), index, store, update(+)
+        //all -> genre, genre2, show, show2
+        $this->middleware('verified')->except(['genre', 'genre2', 'show', 'show2']);
+    }
 
     function create(): View {
         $genres = Genre::pluck('name', 'id');
         return view('blog.create', ['genres' => $genres]);
     }
 
+    //inyección de dependencia (introspección)
+    function deleteGroup(Request $request) {
+        if(!Auth::user()->isAdmin()) {
+            $blogs = Blog::pluck('iduser', 'id');
+            $ids = Blog::where('iduser', Auth::user()->id)->select('id');
+            //foreach($request->id as $id) {
+                //if()
+            //}
+        }
+        //$result = Blog::destroy($request->id);
+        dd($result);
+    }
+
     function destroy(Blog $blog): RedirectResponse {
+        if(!$this->ownerControl($blog)) {
+            return redirect()->route('main.index');
+        }
         try {
             $result = $blog->delete();
             $message = 'The new has been deleted.';
@@ -41,11 +64,15 @@ class BlogController extends Controller {
             return back()->withInput()->withErrors($messageArray);
         }
     }
+
     private function destroyImage($file): void {
         Storage::delete($file);
     }
 
-    function edit(Blog $blog): View {
+    function edit(Blog $blog): RedirectResponse|View {
+        if(!$this->ownerControl($blog)) {
+            return redirect()->route('main.index');
+        }
         $genres = Genre::pluck('name', 'id');
         return view('blog.edit', [
             'blog'   => $blog,
@@ -70,6 +97,11 @@ class BlogController extends Controller {
         $blogs = Blog::all();
         $array = ['blogs' => $blogs];
         return view('blog.index', $array);
+    }
+
+    private function ownerControl(Blog $blog): bool {
+        $user = Auth::user();
+        return $user->id == $blog->iduser || $user->rol == 'admin';
     }
 
     function show(Blog $blog): View {
@@ -158,6 +190,7 @@ class BlogController extends Controller {
         }
         $result = false;
         $blog = new Blog($request->all());
+        $blog->iduser = Auth::user()->id;
         try {
             $result = $blog->save();
             $path = $this->upload($request, $blog->id);
@@ -182,12 +215,16 @@ class BlogController extends Controller {
     }
 
     function update(BlogEditRequest $request, Blog $blog): RedirectResponse {
+        if(!$this->ownerControl($blog)) {
+            return redirect()->route('main.index');
+        }
         $result = false;
         if ($request->deleteimage == 'delete') {
             $this->destroyImage(storage_path(storage_path('app/public') . '/' . $blog->path));
             $this->destroyImage(storage_path(storage_path('app/private') . '/' . $blog->path));
             $blog->path = null;
         }
+        $message = 'mensaje';
         try {
             $path = $this->upload($request, $blog->id);
             if ($path != null) {
@@ -212,7 +249,7 @@ class BlogController extends Controller {
         }
     }
 
-    private function upload(Request $request, $id): string {
+    private function upload(Request $request, $id): string|null {
         $path = null;
         if($request->hasFile('image') && $request->file('image')->isValid()) {
             $image = $request->file('image');

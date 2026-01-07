@@ -16,6 +16,7 @@
                     <br>
                     {{ Auth::user()->name }}<br>
                     {{ Auth::user()->email }}<br>
+                    {{ Auth::user()->rol }}<br>
                     {{ Auth::user()->password }}<br>
                     <a href="{{ route('home.edit') }}">Editar perfil</a>
                 </div>

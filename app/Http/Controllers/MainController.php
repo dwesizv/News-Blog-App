@@ -96,4 +96,17 @@ class MainController extends Controller {
     function privadaPhp(): Response {
         readfile(storage_path('app/private/images/image.jpg'));
     }
+
+    function responsable($iduser): View {
+        $blogs = Blog::where('iduser', $iduser)->orderBy('title', 'desc')->get();
+        foreach($blogs as $blog) {
+            $url = url('assets/img/noticia.jpg');
+            if($blog->path != null) {
+                $url = url('storage/' . $blog->path);
+            }
+            $blog->newPath = $url;
+        }
+        $array = ['blogs' => $blogs];
+        return view('main.index', $array);
+    }
 }

@@ -46,4 +46,31 @@ class User extends Authenticatable implements MustVerifyEmail
             'password' => 'hashed',
         ];
     }
+
+    function blogs(): HasMany {
+        return $this->hasMany('App\Models\Blog', 'iduser');
+    }
+
+    function comments(): HasMany {
+        return $this->hasMany('App\Models\Comment', 'iduser');
+    }
+
+    function isRol($rol): bool {
+        return $this->rol == $rol;
+    }
+
+    function isAdmin(): bool {
+        //return $this->rol === 'admin';
+        return $this->isRol('admin');
+    }
+
+    function isAdvanced(): bool {
+        //return $this->rol === 'advanced';
+        return $this->isRol('advanced');
+    }
+
+    function isUser(): bool {
+        //return $this->rol === 'user';
+        return $this->isRol('user');
+    }
 }

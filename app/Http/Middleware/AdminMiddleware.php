@@ -22,6 +22,5 @@ class AdminMiddleware
         } else {
             return redirect()->route('main.index');
         }
-        
     }
 }

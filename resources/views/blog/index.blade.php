@@ -29,6 +29,7 @@
             <th>#</th>
             <th>Title</th>
             <th>Author</th>
+            <th>User</th>
             <th>Action</th>
         </tr>
     </thead>
@@ -39,16 +40,20 @@
             <td>{{ $blog->id }}</td>
             <td>{{ $blog->title }}</td>
             <td>{{ $blog->author }}</td>
+            <td>{{ $blog->user->name }}</td>
             <td>
                 <a href="{{ route('blog.show', $blog->id) }}" class="btn btn-success">view</a>
+                @if(Auth::user()->isAdmin() || $blog->iduser == Auth::user()->id)
                 <a href="{{ route('blog.edit', $blog->id) }}" class="btn btn-warning">edit</a>
                 <a data-title="{{$blog->title}}" data-href="{{ route('blog.destroy', $blog->id) }}" class="btn-delete btn btn-danger">delete</a>
                 <a data-title="{{$blog->title}}" data-href="{{ route('blog.destroy', $blog->id) }}" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">delete</a>
+                <input type="checkbox" form="form-delete-group" name="id[]" value="{{ $blog->id }}">
+                @endif
                 <!--<form style="display: inline;" action="{{ route('blog.destroy', $blog->id) }}" method="post">
                     @csrf
                     @method('delete')
                     <input class="btn btn-danger" type="submit" value="delete">
-                </form>-->
+                </form>-->              
             </td>
         </tr>
         @endforeach
@@ -58,6 +63,13 @@
         <tr>
             <th colspan="3">Number of blog items:</th>
             <th>{{ count($blogs) }}</th>
+            <th>
+              <form id="form-delete-group" method="post" action="{{ route('blog.delete.group') }}">
+                  @csrf
+                  @method('delete')
+                  <button type="submit" class="btn btn-outline-danger">delete selected news</button>
+              </form>
+            </th>
         </tr>
     </tfoot>
 </table>

@@ -15,6 +15,11 @@ class AdvancedMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        return $next($request);
+        $user = Auth::user();
+        if($user != null && ($user->rol == 'admin' || $user->rol == 'advanced')) {
+            return $next($request);
+        } else {
+            return redirect()->route('main.index');
+        }
     }
 }
