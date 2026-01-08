@@ -71,7 +71,30 @@ class MainController extends Controller {
         return view('main.copy', ['navItems' => $arrayConDatos]);
     }
 
-    function index(): View {
+    private function limpiarCampo($campo): string {
+        return $this->limpiarInput($campo, ['id', 'title', 'idgenre', 'text']);
+    }
+
+    private function limpiarOrden($orden): string {
+        return $this->limpiarInput($orden, ['desc', 'asc']);
+    }
+
+    private function limpiarInput($input, array $array): string {
+        $valor = $array[0];
+        if(in_array($input, $array)) {
+            $valor = $input;
+        }
+        return $valor;
+    }
+
+    function index(Request $request): View {
+        $campo = $this->limpiarCampo($request->campo);
+        $orden = $this->limpiarOrden($request->orden);
+        $blogs = Blog::orderBy($campo, $orden)->paginate(10)->withQueryString();
+        return view('main.index', ['blogs' => $blogs]);
+    }
+
+    function indexOld(): View {
         //$blogs = Blog::all();
         $blogs = Blog::orderBy('title', 'desc')->get();
         foreach($blogs as $blog) {

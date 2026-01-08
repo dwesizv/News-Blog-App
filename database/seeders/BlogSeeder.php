@@ -16,11 +16,13 @@ class BlogSeeder extends Seeder
 
         $faker = \Faker\Factory::create();
 
-        foreach(range(1, 10) as $i) { // Puede ser que si se hacen much
+        $urlUnica = 'https://picsum.photos/seed/' . \Illuminate\Support\Str::uuid() . '/600/600.jpg';
+
+        foreach(range(1, 378) as $i) { // Puede ser que si se hacen much
 
             // Los inicio fuera porque asi puedo asignarle a la imagen aleatoria el nombre+apellido
             $author = $faker->unique()->firstName();
-            $url = 'https://picsum.photos/seed/' . \Illuminate\Support\Str::uuid() . '/600/600.jpg';
+            $url = $urlUnica;
             $path = $this->upload($url, $author);
 
             // Para obtener un array con todos los IDS de genero disponible
@@ -34,6 +36,7 @@ class BlogSeeder extends Seeder
                 "author"     => $author,
                 "entry"      => $faker->sentence(4),
                 "idgenre"    => $id,
+                'iduser'     => 1,
                 "path"       => $path,
                 "text"       => $faker->sentence(16),
                 "title"      => $faker->sentence(4),

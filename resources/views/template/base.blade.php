@@ -97,6 +97,7 @@
         </div>
         @endif
 
+        @yield('modal')       
         @yield('content')
 
       </div>

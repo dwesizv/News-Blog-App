@@ -1,9 +1,36 @@
 @extends('template.base')
 
-@section('content')
+@section('modal')
+<div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="orderModalLabel">Ordenar artículos por ...</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <ul>
+            <li><a class="btn btn-link" href="?campo=id&orden=desc">Los artículos más recientes</a></li>
+            <li><a class="btn btn-link" href="?campo=id&orden=asc">Los artículos más antiguos</a></li>
+            <li><a class="btn btn-link" href="?campo=title&orden=asc">Los títulos primeros (a...z)</a></li>
+            <li><a class="btn btn-link" href="?campo=title&orden=desc">Los títulos últimos (z...a)</a></li>
+            <li><a class="btn btn-link" href="?campo=idgenre&orden=asc">Los géneros primeros (a...z)</a></li>
+            <li><a class="btn btn-link" href="?campo=idgenre&orden=desc">Los géneros últimos (z...a)</a></li>
+            <li><a class="btn btn-link" href="?campo=text&orden=asc">Los artículos más largos</a></li>
+            <li><a class="btn btn-link" href="?campo=text&orden=desc">Los artículos más cortos</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+@endsection
 
+@section('content')
 @yield('anytitle')
-<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+<div class="row mb-4">
+    <a class="btn btn-info" data-bs-toggle="modal" data-bs-target="#orderModal">Ordenar por ...</a>
+</div>
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 mb-2">
     @foreach($blogs as $blog)
     <div class="col">
         <div class="card shadow-sm" style="min-height: 500px;">
@@ -65,6 +92,9 @@
         </div>
     </div>
     @endforeach
+</div>
+<div class="row">
+    {{ $blogs->onEachSide(2)->links() }}
 </div>
 
 @endsection
