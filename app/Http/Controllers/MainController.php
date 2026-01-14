@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Blog;
+use App\Models\Genre;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
@@ -87,16 +88,59 @@ class MainController extends Controller {
         return $valor;
     }
 
+    /*if($q != null) {
+        if($campo != 'text') {
+            $blogs = Blog::where('title', 'like', '%' . $q . '%')->orderBy($campo, $orden)->paginate(10)->withQueryString();
+        } else {
+            $blogs = Blog::where('title', 'like', '%' . $q . '%')->orderByRaw("char_length($campo) $orden")->paginate(10)->withQueryString();
+        }
+    } else {
+        if($campo != 'text') {
+            $blogs = Blog::orderBy($campo, $orden)->paginate(10)->withQueryString();
+        } else {
+            $blogs = Blog::orderByRaw("char_length($campo) $orden")->paginate(10)->withQueryString();
+        }
+    }*/
     function index(Request $request): View {
         $campo = $this->limpiarCampo($request->campo);
         $orden = $this->limpiarOrden($request->orden);
-        $blogs = Blog::orderBy($campo, $orden)->paginate(10)->withQueryString();
-        return view('main.index', ['blogs' => $blogs]);
+        $q = $request->q;
+        $idgenre = $request->idgenre;
+        $query = Blog::query();
+        if($idgenre != null) {
+            $query->where('idgenre', '=', $idgenre);
+        }
+        if($q != null) {
+            $query->orWhere('title', 'like', '%' . $q . '%')
+                    ->orWhere('entry', 'like', '%' . $q . '%')
+                    ->orWhere('text', 'like', '%' . $q . '%')
+                    ->orWhere('author', 'like', '%' . $q . '%')
+                    ->orWhere('id', 'like', '%' . $q . '%')
+                    ->orWhere('idgenre', 'like', '%' . $q . '%');
+        }
+        if($campo != 'text') {
+            $query->orderBy($campo, $orden);
+        } else {
+            $query->orderByRaw("char_length($campo) $orden");
+        }
+        $blogs = $query->paginate(10)->withQueryString();
+        //$genres1 = Genre::all();//select * from genre
+        //$genres2 = Genre::orderBy('name', 'asc')->get(); //select * from genre order by name asc
+        $genres = Genre::pluck('name', 'id'); //select * from genre order by name asc, formato 
+        return view('main.index', [
+            'blogs'   => $blogs,
+            'campo'   => $campo,
+            'genres'  => $genres,
+            'idgenre' => $idgenre,
+            'orden'   => $orden,
+            'q' => $q
+        ]);
     }
 
     function indexOld(): View {
         //$blogs = Blog::all();
         $blogs = Blog::orderBy('title', 'desc')->get();
+        //$blogs = Blog::orderBy('title', 'desc')->get();
         foreach($blogs as $blog) {
             $url = url('assets/img/noticia.jpg');
             if($blog->path != null) {

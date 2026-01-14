@@ -10,15 +10,47 @@
       </div>
       <div class="modal-body">
         <ul>
-            <li><a class="btn btn-link" href="?campo=id&orden=desc">Los artículos más recientes</a></li>
-            <li><a class="btn btn-link" href="?campo=id&orden=asc">Los artículos más antiguos</a></li>
-            <li><a class="btn btn-link" href="?campo=title&orden=asc">Los títulos primeros (a...z)</a></li>
-            <li><a class="btn btn-link" href="?campo=title&orden=desc">Los títulos últimos (z...a)</a></li>
-            <li><a class="btn btn-link" href="?campo=idgenre&orden=asc">Los géneros primeros (a...z)</a></li>
-            <li><a class="btn btn-link" href="?campo=idgenre&orden=desc">Los géneros últimos (z...a)</a></li>
-            <li><a class="btn btn-link" href="?campo=text&orden=asc">Los artículos más largos</a></li>
-            <li><a class="btn btn-link" href="?campo=text&orden=desc">Los artículos más cortos</a></li>
+            <li>
+                <a class="btn btn-link"
+                   href="{{ route('main.index', ['campo' => 'id', 'orden' => 'desc', 'q' => $q]) }}">
+                   Los artículos más recientes
+                </a>
+            </li>
+            <li><a href="{{ route('main.index', ['campo' => 'id', 'orden' => 'desc', 'q' => $q, 'idgenre' => $idgenre]) }}" class="btn btn-outline-primary mb-1">Los articulos más recientes</a></li>
+            <li><a href="{{ route('main.index', ['campo' => 'id', 'orden' => 'asc', 'q' => $q, 'idgenre' => $idgenre]) }}" class="btn btn-outline-primary mb-1">Los articulos más antiguos</a></li>
+            <li><a href="{{ route('main.index', ['campo' => 'title', 'orden' => 'asc', 'q' => $q, 'idgenre' => $idgenre]) }}" class="btn btn-outline-primary mb-1">Título orden alfabético</a></li>
+            <li><a href="{{ route('main.index', ['campo' => 'title', 'orden' => 'desc', 'q' => $q, 'idgenre' => $idgenre]) }}" class="btn btn-outline-primary mb-1">Título orden anti-alfabético</a></li>
+            <li><a href="{{ route('main.index', ['campo' => 'idgenre', 'orden' => 'asc', 'q' => $q, 'idgenre' => $idgenre]) }}" class="btn btn-outline-primary mb-1">Género orden alfabético</a></li>
+            <li><a href="{{ route('main.index', ['campo' => 'idgenre', 'orden' => 'desc', 'q' => $q, 'idgenre' => $idgenre]) }}" class="btn btn-outline-primary mb-1">Género orden anti-alfabético</a></li>
+            <li><a href="{{ route('main.index', ['campo' => 'text', 'orden' => 'desc', 'q' => $q, 'idgenre' => $idgenre]) }}" class="btn btn-outline-primary mb-1">Los artículos más largos</a></li>
+            <li><a href="{{ route('main.index', ['campo' => 'text', 'orden' => 'asc', 'q' => $q, 'idgenre' => $idgenre]) }}" class="btn btn-outline-primary mb-1">Los artículos más cortos</a></li>
         </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="filterModalLabel">Filtrar artículos por ...</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <select required name="idgenre" id="idgenre" class="form-control">
+            <option value=""
+                @if(old('idgenre') == null)
+                    selected
+                @endif
+            disabled>Selecciona una opción...</option>
+            @foreach($genres as $i => $genre)
+                <option value="{{ $i }}"
+                    @if($i == old('idgenre'))
+                        selected
+                    @endif
+                >{{ $genre }}</option>
+            @endforeach
+        </select>
       </div>
     </div>
   </div>
@@ -27,8 +59,9 @@
 
 @section('content')
 @yield('anytitle')
-<div class="row mb-4">
-    <a class="btn btn-info" data-bs-toggle="modal" data-bs-target="#orderModal">Ordenar por ...</a>
+<div class="mb-4">
+    <a class="btn btn-info mb-2" data-bs-toggle="modal" data-bs-target="#orderModal">Ordenar por ...</a>
+    <a class="btn btn-info mb-2" data-bs-toggle="modal" data-bs-target="#filterModal">Filtrar por ...</a>
 </div>
 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 mb-2">
     @foreach($blogs as $blog)
@@ -77,6 +110,10 @@
             <div class="card-body">
                 <p class="card-text">
                     {{ $blog->entry }}
+                    | id {{ $blog->id }} 
+                    | strlen {{ mb_strlen($blog->text) }} 
+                    | idgenre {{ $blog->idgenre }}
+                    | genre {{ $blog->genre->name }}
                 </p>
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="btn-group">

@@ -158,7 +158,7 @@ class BlogController extends Controller {
         // validando clave única compuesta
         $rules = [
             'author' => [
-                'min:20',
+                'min:2',
                 'max:100',
                 Rule::unique('blog')
                     //$query -> se inyecta la consulta que se debe ejecutar
