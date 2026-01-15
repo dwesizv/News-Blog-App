@@ -57,8 +57,11 @@
               <a class="nav-link disabled">Disabled</a>
             </li>
           </ul>
-          <form class="d-flex" role="search" method="get" action="{{ route('main.index', ['campo' => $campo, 'orden' => $orden]) }}">
-            <input class="form-control me-2" name="q" type="search" placeholder="Search" aria-label="Search" value="{{ $q }}">
+          <form class="d-flex" role="search" method="get" action="{{ route('main.index') }}">
+            @foreach(request()->except(['page', 'q']) as $key => $value)
+                <input type="hidden" name="{{ $key }}" value="{{ $value }}">
+            @endforeach
+            <input class="form-control me-2" name="q" type="search" placeholder="Search" aria-label="Search" value="{{ $q ?? '' }}">
             <button class="btn btn-outline-success" type="submit">Search</button>
           </form>
           <ul class="navbar-nav" style="padding-left: 4px;">

@@ -73,7 +73,7 @@ class MainController extends Controller {
     }
 
     private function limpiarCampo($campo): string {
-        return $this->limpiarInput($campo, ['id', 'title', 'idgenre', 'text']);
+        return $this->limpiarInput($campo, ['recent', 'title', 'genre', 'text']);
     }
 
     private function limpiarOrden($orden): string {
@@ -86,6 +86,21 @@ class MainController extends Controller {
             $valor = $input;
         }
         return $valor;
+    }
+
+    private function getOrderBy($orderRequest): string {
+        $array = [
+            'recent' => 'blog.id',
+            'title'  => 'blog.title',
+            'genre'  => 'genre.name',
+            'text'   => 'blog.text'
+        ];
+        return $array[$orderRequest];
+    }
+
+    private function limpiarNumeros($numero): mixed {
+        if (!is_numeric($numero) || $numero < 0) return null;
+        return $numero;
     }
 
     /*if($q != null) {
@@ -102,28 +117,82 @@ class MainController extends Controller {
         }
     }*/
     function index(Request $request): View {
+        //dd(request()->query(), request()->except('page'));
         $campo = $this->limpiarCampo($request->campo);
         $orden = $this->limpiarOrden($request->orden);
         $q = $request->q;
         $idgenre = $request->idgenre;
+        $desde = $this->limpiarNumeros($request->desde);
+        $hasta = $this->limpiarNumeros($request->hasta);
         $query = Blog::query();
+        $query->join('genre', 'blog.idgenre', '=', 'genre.id')->select('blog.*', 'genre.name');
+        $sql = 'select b.*, g.name from blog b join genre g on b.idgenre = g.id where 1 = 1 ';
+        //$sql2 = 'where 1 = 1 ';
+        $paramSql = [];
+        if ($desde) {
+            // $query->where('char_length(text)', '>=', $desde);
+            $query->whereRaw("char_length(blog.text) >= $desde");
+            $sql .= 'and "char_length(b.text) >= :desde ';
+            $paramSql['desde'] = $desde;
+        }
+        if ($hasta) {
+            // $query->where('char_length(text)', '<=', $hasta);
+            $query->whereRaw("char_length(blog.text) <= $hasta");
+            $sql .= 'and "char_length(b.text) >= :hasta ';
+            $paramSql['hasta'] = $hasta;
+        }
         if($idgenre != null) {
-            $query->where('idgenre', '=', $idgenre);
+            $query->where('blog.idgenre', '=', $idgenre);
+            $sql .= 'and b.idgenre = :idgenre ';
+            $paramSql['idgenre'] = $idgenre;
         }
         if($q != null) {
-            $query->orWhere('title', 'like', '%' . $q . '%')
+            //$sql2 .= 'and (title like :q1 or entry like :q2 or text like :q3 or author like :q4 or id like :q5 or idgenre like :q6) ';
+            //$sql1 .= 'join genre g on b.idgenre = g.id ';
+            $sql .= 'and (b.title like :q1 or b.entry like :q2 or b.text like :q3 or b.author like :q4 or b.id like :q5 or g.name like :q6) ';
+            $paramSql['q1'] = '%' . $q . '%';
+            $paramSql['q2'] = '%' . $q . '%';
+            $paramSql['q3'] = '%' . $q . '%';
+            $paramSql['q4'] = '%' . $q . '%';
+            $paramSql['q5'] = '%' . $q . '%';
+            $paramSql['q6'] = '%' . $q . '%';
+            /*$query->where('title', 'like', '%' . $q . '%')
                     ->orWhere('entry', 'like', '%' . $q . '%')
                     ->orWhere('text', 'like', '%' . $q . '%')
                     ->orWhere('author', 'like', '%' . $q . '%')
                     ->orWhere('id', 'like', '%' . $q . '%')
-                    ->orWhere('idgenre', 'like', '%' . $q . '%');
+                    ->orWhere('idgenre', 'like', '%' . $q . '%');*/
+            $query->where(function($sq) use ($q) { //subconsulta
+                $sq->where('blog.title', 'like', '%' . $q . '%')
+                    ->orWhere('blog.entry', 'like', '%' . $q . '%')
+                    ->orWhere('blog.text', 'like', '%' . $q . '%')
+                    ->orWhere('blog.author', 'like', '%' . $q . '%')
+                    ->orWhere('blog.id', 'like', '%' . $q . '%')
+                    //->orWhere('idgenre', 'like', '%' . $q . '%');
+                    ->orWhere('genre.name', 'like', '%' . $q . '%');
+                /*$sq->orWhereHas('genre', function($ssq) use ($q) {
+                    $ssq->where('name', 'like', '%' . $q . '%');
+                });*/
+            });
         }
-        if($campo != 'text') {
-            $query->orderBy($campo, $orden);
+        $campoOrder = $this->getOrderBy($campo);
+        if($campo != 'blog.text') {
+            $query->orderBy($campoOrder, $orden);
+            $sql .= 'order by b.' . $campo . ' ' . $orden . ' ';
         } else {
-            $query->orderByRaw("char_length($campo) $orden");
+            $query->orderByRaw("char_length($campoOrder) $orden");
+            $sql .= 'order by length(b.' . $campo . ') ' . $orden . ' ';
         }
+        $page = $request->page;
+        if($page == null) {
+            $page = 1;
+        }
+        $posicionInicial = ($page - 1) * 10;
+        $sql .= 'limit ' . $posicionInicial . ', 10';
+        //$blogsSql = DB::select($sql, $paramSql);
+        //dd($blogsSql, $sql1 . ' ' . $sql2);
         $blogs = $query->paginate(10)->withQueryString();
+        //dd($blogs);
         //$genres1 = Genre::all();//select * from genre
         //$genres2 = Genre::orderBy('name', 'asc')->get(); //select * from genre order by name asc
         $genres = Genre::pluck('name', 'id'); //select * from genre order by name asc, formato 
@@ -132,8 +201,12 @@ class MainController extends Controller {
             'campo'   => $campo,
             'genres'  => $genres,
             'idgenre' => $idgenre,
+            'desde'   => $desde,
+            'hasta'   => $hasta,
             'orden'   => $orden,
-            'q' => $q
+            'q' => $q,
+            //'urlDestino' => route('main.index',  ['campo' => $campo, 'orden' => $orden])
+            'urlDestino' => route('main.index',  $request->except('page'))
         ]);
     }
 

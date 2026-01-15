@@ -12,18 +12,19 @@
         <ul>
             <li>
                 <a class="btn btn-link"
-                   href="{{ route('main.index', ['campo' => 'id', 'orden' => 'desc', 'q' => $q]) }}">
+                   href="{{ route('main.index', array_merge(['campo' => 'id', 'orden' => 'desc'], request()->except(['page', 'campo', 'orden']))) }}"
+                   >
                    Los artículos más recientes
                 </a>
             </li>
-            <li><a href="{{ route('main.index', ['campo' => 'id', 'orden' => 'desc', 'q' => $q, 'idgenre' => $idgenre]) }}" class="btn btn-outline-primary mb-1">Los articulos más recientes</a></li>
-            <li><a href="{{ route('main.index', ['campo' => 'id', 'orden' => 'asc', 'q' => $q, 'idgenre' => $idgenre]) }}" class="btn btn-outline-primary mb-1">Los articulos más antiguos</a></li>
-            <li><a href="{{ route('main.index', ['campo' => 'title', 'orden' => 'asc', 'q' => $q, 'idgenre' => $idgenre]) }}" class="btn btn-outline-primary mb-1">Título orden alfabético</a></li>
-            <li><a href="{{ route('main.index', ['campo' => 'title', 'orden' => 'desc', 'q' => $q, 'idgenre' => $idgenre]) }}" class="btn btn-outline-primary mb-1">Título orden anti-alfabético</a></li>
-            <li><a href="{{ route('main.index', ['campo' => 'idgenre', 'orden' => 'asc', 'q' => $q, 'idgenre' => $idgenre]) }}" class="btn btn-outline-primary mb-1">Género orden alfabético</a></li>
-            <li><a href="{{ route('main.index', ['campo' => 'idgenre', 'orden' => 'desc', 'q' => $q, 'idgenre' => $idgenre]) }}" class="btn btn-outline-primary mb-1">Género orden anti-alfabético</a></li>
-            <li><a href="{{ route('main.index', ['campo' => 'text', 'orden' => 'desc', 'q' => $q, 'idgenre' => $idgenre]) }}" class="btn btn-outline-primary mb-1">Los artículos más largos</a></li>
-            <li><a href="{{ route('main.index', ['campo' => 'text', 'orden' => 'asc', 'q' => $q, 'idgenre' => $idgenre]) }}" class="btn btn-outline-primary mb-1">Los artículos más cortos</a></li>
+            <li><a href="{{ route('main.index', array_merge(request()->except(['page', 'campo', 'orden']),['campo' => 'recent',      'orden' => 'desc'])) }}" class="btn btn-outline-primary mb-1">Los articulos más recientes</a></li>
+            <li><a href="{{ route('main.index', array_merge(request()->except(['page', 'campo', 'orden']),['campo' => 'recent',      'orden' => 'asc' ])) }}" class="btn btn-outline-primary mb-1">Los articulos más antiguos</a></li>
+            <li><a href="{{ route('main.index', array_merge(request()->except(['page', 'campo', 'orden']),['campo' => 'title',   'orden' => 'asc' ])) }}" class="btn btn-outline-primary mb-1">Título orden alfabético</a></li>
+            <li><a href="{{ route('main.index', array_merge(request()->except(['page', 'campo', 'orden']),['campo' => 'title',   'orden' => 'desc'])) }}" class="btn btn-outline-primary mb-1">Título orden anti-alfabético</a></li>
+            <li><a href="{{ route('main.index', array_merge(request()->except(['page', 'campo', 'orden']),['campo' => 'genre', 'orden' => 'asc' ])) }}" class="btn btn-outline-primary mb-1">Género orden alfabético</a></li>
+            <li><a href="{{ route('main.index', array_merge(request()->except(['page', 'campo', 'orden']),['campo' => 'genre', 'orden' => 'desc'])) }}" class="btn btn-outline-primary mb-1">Género orden anti-alfabético</a></li>
+            <li><a href="{{ route('main.index', array_merge(request()->except(['page', 'campo', 'orden']),['campo' => 'text',    'orden' => 'desc'])) }}" class="btn btn-outline-primary mb-1">Los artículos más largos</a></li>
+            <li><a href="{{ route('main.index', array_merge(request()->except(['page', 'campo', 'orden']),['campo' => 'text',    'orden' => 'asc' ])) }}" class="btn btn-outline-primary mb-1">Los artículos más cortos</a></li>
         </ul>
       </div>
     </div>
@@ -37,20 +38,30 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <select required name="idgenre" id="idgenre" class="form-control">
-            <option value=""
-                @if(old('idgenre') == null)
-                    selected
-                @endif
-            disabled>Selecciona una opción...</option>
-            @foreach($genres as $i => $genre)
-                <option value="{{ $i }}"
-                    @if($i == old('idgenre'))
+        <form id="filterForm" action="{{ route('main.index') }}" method="get">
+            
+            <input type="hidden" name="campo" value="{{ $campo }}">
+            <input type="hidden" name="orden" value="{{ $orden }}">
+            <input type="hidden" name="q" value="{{ $q }}">
+            
+            <select name="idgenre" id="idgenre" class="form-control">
+                <option value=""
+                    @if($idgenre == null)
                         selected
                     @endif
-                >{{ $genre }}</option>
-            @endforeach
-        </select>
+                >Selecciona una opción...</option>
+                @foreach($genres as $i => $genre)
+                    <option value="{{ $i }}"
+                        @if($i == $idgenre)
+                            selected
+                        @endif
+                    >{{ $genre }}</option>
+                @endforeach
+            </select>
+            <input type="number" class="form-control" name="desde" value="{{ $desde }}" placeholder="Desde caracteres" min="0" step="1">
+            <input type="number" class="form-control" name="hasta" value="{{ $hasta }}" placeholder="Hasta caracteres" min="0" step="1">
+            <input type="submit" class="btn btn-primary form-control" value="Filtrar">
+        </form>
       </div>
     </div>
   </div>
