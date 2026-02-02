@@ -4,6 +4,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <base href="{{ route('main.index') }}">
     <title>@yield('title', 'News Blog')</title>
     <link rel="icon" type="image/x-icon" href="{{ url('favicon.ico') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -12,6 +13,11 @@
   </head>
 
   <body>
+    <div id="while-fetch" class="hide" style="position: absolute; z-index: 10000; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
+      <div style="display: flex; width: 100%; height:100%; justify-content: center; align-items: center;">
+        <img src="{{ url('assets/img/css-loader.gif') }}" alt="" width="50px">
+      </div>
+    </div>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container">
         <a class="navbar-brand" href="{{ route('main.index') }}">@yield('navbar', 'News Blog')</a>
@@ -100,14 +106,15 @@
         </div>
         @endif
 
-        @yield('modal')       
+        @yield('modal')
+              
         @yield('content')
 
       </div>
+      @yield('scripts')
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
-      @yield('scripts')
       <script src="{{ url('assets/js/main.js?r=' . rand(1, 10000)) }}"></script>
   </body>
 

@@ -116,6 +116,60 @@ class MainController extends Controller {
             $blogs = Blog::orderByRaw("char_length($campo) $orden")->paginate(10)->withQueryString();
         }
     }*/
+    
+    function indexOlder(Request $request) {
+        $campo = $this->limpiarCampo($request->campo);
+        $campoOrder = $this->getOrderBy($campo);
+        $orden = $this->limpiarOrden($request->orden);
+        $q = $request->q;
+        $idgenre = $request->idgenre;
+        $desde = $this->limpiarNumeros($request->desde);
+        $hasta = $this->limpiarNumeros($request->hasta);
+        $query = DB::table('blog');
+        $query->join('genre', 'blog.idgenre', '=', 'genre.id');
+        $query->select('blog.*','genre.name');
+        if ($desde) {
+            $query->raw("char_length(blog.text) >= $desde");
+        }
+        if ($hasta) {
+            $query->raw("char_length(blog.text) <= $hasta");
+        }
+        if($idgenre != null) {
+            $query->where('blog.idgenre', '=', $idgenre);
+        }
+        if($q != null) {
+            $query->where(function($sq) use ($q) {
+                $sq->where('blog.title', 'like', '%' . $q . '%')
+                    ->orWhere('blog.entry', 'like', '%' . $q . '%')
+                    ->orWhere('blog.text', 'like', '%' . $q . '%')
+                    ->orWhere('blog.author', 'like', '%' . $q . '%')
+                    ->orWhere('blog.id', 'like', '%' . $q . '%')
+                    ->orWhere('genre.name', 'like', '%' . $q . '%');
+            });
+        }
+        if($campo != 'blog.text') {
+            $query->orderBy($campoOrder, $orden);
+        } else {
+            $query->orderBy("char_length($campoOrder) $orden");
+        }
+        $blogs = $query->paginate(10)->withQueryString();
+        //dd($blogs);
+        $genres = Genre::pluck('name', 'id');
+        return view('main.index', [
+            'blogs'   => $blogs,
+            'campo'   => $campo,
+            'genres'  => $genres,
+            'idgenre' => $idgenre,
+            'desde'   => $desde,
+            'hasta'   => $hasta,
+            'orden'   => $orden,
+            'q' => $q,            
+            'urlDestino' => route('main.index',  $request->except('page'))
+        ]);
+        // DB -> array de array
+        // Eloquent -> coleccion de modelo
+    }
+
     function index(Request $request): View {
         //dd(request()->query(), request()->except('page'));
         $campo = $this->limpiarCampo($request->campo);
@@ -178,10 +232,10 @@ class MainController extends Controller {
         $campoOrder = $this->getOrderBy($campo);
         if($campo != 'blog.text') {
             $query->orderBy($campoOrder, $orden);
-            $sql .= 'order by b.' . $campo . ' ' . $orden . ' ';
+            //$sql .= 'order by b.' . $campoOrder . ' ' . $orden . ' ';
         } else {
             $query->orderByRaw("char_length($campoOrder) $orden");
-            $sql .= 'order by length(b.' . $campo . ') ' . $orden . ' ';
+            //$sql .= 'order by length(b.' . $campoOrder . ') ' . $orden . ' ';
         }
         $page = $request->page;
         if($page == null) {
@@ -190,7 +244,7 @@ class MainController extends Controller {
         $posicionInicial = ($page - 1) * 10;
         $sql .= 'limit ' . $posicionInicial . ', 10';
         //$blogsSql = DB::select($sql, $paramSql);
-        //dd($blogsSql, $sql1 . ' ' . $sql2);
+        //dd($blogsSql, $sql);
         $blogs = $query->paginate(10)->withQueryString();
         //dd($blogs);
         //$genres1 = Genre::all();//select * from genre

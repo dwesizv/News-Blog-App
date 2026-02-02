@@ -19,6 +19,7 @@ Route::get('image/{id}', [ImageController::class, 'view'])->name('image.view');
 // blog controller
 Route::delete('blog/delete/group', [BlogController::class, 'deleteGroup'])->name('blog.delete.group');
 Route::resource('blog', BlogController::class);
+Route::get('async', [BlogController::class, 'async'])->name('blog.async');
 Route::resource('genre', GenreController::class);
 Route::resource('user', UserController::class);
 Route::get('blog/genre/{genre}', [BlogController::class, 'genre'])->name('blog.genre');

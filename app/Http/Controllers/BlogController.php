@@ -23,7 +23,7 @@ class BlogController extends Controller {
     function __construct() {
         //verified -> create, destroy(+), edit(+), index, store, update(+)
         //all -> genre, genre2, show, show2
-        $this->middleware('verified')->except(['genre', 'genre2', 'show', 'show2']);
+        $this->middleware('verified')->except(['async', 'genre', 'genre2', 'show', 'show2']);
     }
 
     function create(): View {
@@ -97,6 +97,10 @@ class BlogController extends Controller {
         $blogs = Blog::all();
         $array = ['blogs' => $blogs];
         return view('blog.index', $array);
+    }
+
+    function async(): View {
+        return view('blog.async');
     }
 
     private function ownerControl(Blog $blog): bool {

@@ -1,0 +1,26 @@
+GET https://dwestarde.hopto.org/laraveles/blogApp/public/api/blog/25
+Accept: application/json
+
+#DELETE https://dwestarde.hopto.org/laraveles/blogApp/public/api/blog/26
+#Accept: application/json
+
+# POST https://dwestarde.hopto.org/laraveles/blogApp/public/api/blog
+# Accept: application/json
+# Content-Type: application/json
+
+# {
+#     "title":   "Título 2",
+#     "entry":   "Entrada 2",
+#     "text":    "Texto 2",
+#     "author":  "Frida 2",
+#     "idgenre": 10,
+#     "iduser":  2
+# }
+
+# PUT https://dwestarde.hopto.org/laraveles/blogApp/public/api/blog/1
+# Content-Type: application/json
+# Accept: application/json
+#
+# {
+#     "title":   "Título Nuevo"
+# }
